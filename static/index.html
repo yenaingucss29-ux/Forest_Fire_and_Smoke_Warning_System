@@ -8,52 +8,75 @@
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <span class="brand-mark" aria-hidden="true">🌲</span>
-      <div>
-        <h1>Forest Smoke Warning System</h1>
-        <p class="sub">Upload a forest photo and the Enhanced YOLOv8 model checks it for smoke.</p>
+  <header class="hero">
+    <nav class="nav">
+      <span class="nav-brand"><span aria-hidden="true">🌲</span> Forest Smoke Warning</span>
+      <div class="nav-actions">
+        <span id="emailStatus" class="pill">Checking email…</span>
+        <a href="/admin" class="btn-nav">Admin</a>
       </div>
+    </nav>
+    <div class="hero-body">
+      <p class="eyebrow">Enhanced YOLOv8 · Smoke detection</p>
+      <h1>Forest Smoke Warning System</h1>
+      <p class="lead">Upload a forest photo and the Enhanced YOLOv8 model checks it for smoke.
+        If it finds any, the alarm goes off here and an alert email goes out.</p>
     </div>
-    <span id="emailStatus" class="pill">Checking email…</span>
   </header>
 
-  <div id="alert" class="alert" hidden role="alert">
-    <div class="alert-body">
-      <strong id="alertTitle"></strong>
-      <span id="alertText"></span>
-      <span id="alertEmail" class="alert-email"></span>
-    </div>
-    <button id="alertDismiss" class="btn-ghost" type="button">Dismiss</button>
-  </div>
-
-  <main class="layout">
-    <section class="panel">
-      <h2>Upload a photo</h2>
+  <main class="home">
+    <section class="home-card upload-card">
       <label id="dropzone" class="dropzone" for="fileInput">
         <input id="fileInput" type="file" accept="image/*" hidden>
-        <span class="drop-icon" aria-hidden="true">⬆</span>
-        <span class="drop-title">Drop an image here or click to choose</span>
+        <svg class="drop-icon" viewBox="0 0 24 24" width="44" height="44" aria-hidden="true" fill="none"
+          stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>
+        </svg>
+        <span class="drop-title">Drop a forest photo here</span>
+        <span class="drop-or">or</span>
+        <span class="btn">Choose a photo</span>
         <span class="drop-hint">JPG, PNG, BMP or WEBP · up to 15 MB</span>
       </label>
       <p id="uploadError" class="error" hidden></p>
+      <p id="resultLoading" class="loading" hidden><span class="spinner"></span> Checking for smoke…</p>
     </section>
 
-    <section class="panel">
-      <h2>Result</h2>
-      <div id="resultEmpty" class="empty">No photo checked yet.</div>
-      <div id="resultLoading" class="empty" hidden><span class="spinner"></span> Checking for smoke…</div>
-      <div id="result" hidden>
-        <div id="verdict" class="verdict"></div>
-        <img id="resultImage" class="result-image" alt="Uploaded photo with detected regions boxed">
-        <ul id="detections" class="detections"></ul>
-        <p id="resultMeta" class="meta"></p>
+    <div id="alert" class="alert" hidden role="alert">
+      <div class="alert-body">
+        <strong id="alertTitle"></strong>
+        <span id="alertText"></span>
+        <span id="alertEmail" class="alert-email"></span>
+      </div>
+      <button id="alertDismiss" class="btn-ghost" type="button">Dismiss</button>
+    </div>
+
+    <section id="result" class="home-card result-card" hidden>
+      <div class="result-head">
+        <h2 id="verdict" class="verdict"></h2>
+        <span id="resultMeta" class="meta"></span>
+      </div>
+      <img id="resultImage" class="result-image" alt="Uploaded photo with detected regions boxed">
+      <ul id="detections" class="detections"></ul>
+    </section>
+
+    <section class="steps" aria-label="How it works">
+      <div class="step">
+        <span class="step-num">1</span>
+        <h3>Upload</h3>
+        <p>Drop in a photo of the forest. Later, frames from a forest camera will come in the same way.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <h3>Detect</h3>
+        <p>The Enhanced YOLOv8 model draws a box around every patch of smoke it finds.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <h3>Alert</h3>
+        <p>Smoke sets off the alarm on this page and sends an email to the person responsible.</p>
       </div>
     </section>
   </main>
-
-  <footer class="footer"><a href="/admin">Admin</a></footer>
 
   <script src="/static/app.js"></script>
 </body>

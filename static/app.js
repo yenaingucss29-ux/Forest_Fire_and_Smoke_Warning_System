@@ -8,7 +8,7 @@ const dropzone = $("dropzone");
 async function loadStatus() {
   const s = await (await fetch("/api/status")).json();
   const pill = $("emailStatus");
-  pill.textContent = s.email_configured ? `Email alerts on · ${s.email_to}` : "Email alerts not set up";
+  pill.textContent = s.email_configured ? "● Email alerts on" : "○ Email alerts off";
   pill.className = "pill " + (s.email_configured ? "on" : "off");
 }
 
@@ -36,7 +36,6 @@ dropzone.addEventListener("drop", (e) => {
 async function checkImage(file) {
   $("uploadError").hidden = true;
   $("alert").hidden = true;
-  $("resultEmpty").hidden = true;
   $("result").hidden = true;
   $("resultLoading").hidden = false;
 
@@ -47,10 +46,10 @@ async function checkImage(file) {
     const data = await res.json();
     if (!res.ok) throw new Error(data.detail || "Detection failed.");
     showResult(data);
+    ($("alert").hidden ? $("result") : $("alert")).scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (err) {
     $("uploadError").textContent = err.message;
     $("uploadError").hidden = false;
-    $("resultEmpty").hidden = false;
   } finally {
     $("resultLoading").hidden = true;
     fileInput.value = ""; // allow choosing the same file again
@@ -94,7 +93,6 @@ function showAlert(data) {
     ? (data.email.sent ? "📧 " : "⚠️ ") + data.email.detail
     : "";
   alert.hidden = false;
-  alert.scrollIntoView({ behavior: "smooth", block: "nearest" });
   if (data.smoke_detected) playAlarm();
 }
 
