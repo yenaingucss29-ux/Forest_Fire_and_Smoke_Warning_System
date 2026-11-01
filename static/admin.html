@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smoke Warning Admin</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌲</text></svg>">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">🌲</span>
+      <div>
+        <h1>Forest Smoke Warning · Admin</h1>
+        <p class="sub">Alert settings and recent activity.</p>
+      </div>
+    </div>
+    <nav class="topnav">
+      <a href="/" class="btn-ghost">View site</a>
+      <button id="signOut" class="btn-ghost" type="button" hidden>Sign out</button>
+    </nav>
+  </header>
+
+  <form id="signIn" class="panel signin" hidden>
+    <h2>Sign in</h2>
+    <label for="password" class="setting-label">Admin password</label>
+    <div class="unlock-row">
+      <input id="password" type="password" autocomplete="current-password" required>
+      <button class="btn" type="submit">Sign in</button>
+    </div>
+    <p id="signInError" class="error" hidden></p>
+  </form>
+
+  <main id="dashboard" class="admin" hidden>
+    <p id="openWarning" class="notice" hidden>
+      ⚠️ No <code>ADMIN_PASSWORD</code> is set, so anyone who opens /admin can change these settings.
+      Set one before sharing the link.
+    </p>
+
+    <section class="cards">
+      <div class="card">
+        <span class="card-label">Model</span>
+        <strong class="ok">● Online</strong>
+        <span id="modelName"></span>
+        <span id="modelLabels"></span>
+      </div>
+      <div class="card">
+        <span class="card-label">Email alerts</span>
+        <strong id="emailState"></strong>
+        <span id="emailTo" class="clip"></span>
+        <span>via Resend</span>
+      </div>
+      <div class="card">
+        <span class="card-label">Checks today</span>
+        <strong id="checks"></strong>
+        <span id="checksSmoke"></span>
+        <span id="checksClear"></span>
+      </div>
+      <div class="card">
+        <span class="card-label">Emails today</span>
+        <strong id="emails"></strong>
+        <span>Resend free daily limit</span>
+        <span class="card-note">Counts reset at midnight (server time) and on restart</span>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Detection</h2>
+      <label for="confidence" class="setting-label">
+        Confidence threshold: <output id="confidenceValue"></output> <span id="confidenceSource" class="h2-hint"></span>
+      </label>
+      <p class="setting-hint">
+        Lower catches more smoke but gives more false alarms. Default from <code>.env</code>:
+        <span id="confidenceDefault"></span> (0.30 had the best F1 score on the validation set).
+      </p>
+      <input id="confidence" type="range" min="0.05" max="0.95" step="0.01">
+      <div class="actions">
+        <button id="saveConfidence" class="btn" type="button" disabled>Save</button>
+        <button id="resetConfidence" class="btn-ghost" type="button">Reset to .env default</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Alerts</h2>
+      <div class="setting">
+        <div>
+          <label for="notifyNoSmoke" class="setting-label">Alert when no smoke is found</label>
+          <p class="setting-hint">Smoke always raises the alarm. Turn this on to also show "All clear" and send an
+            email for photos without smoke.</p>
+        </div>
+        <label class="switch">
+          <input id="notifyNoSmoke" type="checkbox">
+          <span class="slider" aria-hidden="true"></span>
+        </label>
+      </div>
+      <div class="setting">
+        <div>
+          <label for="cooldown" class="setting-label">Email cooldown</label>
+          <p class="setting-hint">After an alert email, wait this long before sending another of the same kind (smoke
+            or all clear), so a burst of uploads doesn't flood the inbox.</p>
+        </div>
+        <select id="cooldown">
+          <option value="0">Off</option>
+          <option value="1">1 min</option>
+          <option value="5">5 min</option>
+          <option value="15">15 min</option>
+          <option value="30">30 min</option>
+          <option value="60">1 hour</option>
+        </select>
+      </div>
+      <div class="setting">
+        <div>
+          <span class="setting-label">Test email</span>
+          <p class="setting-hint">Sends a test email to <span id="testTo"></span>. It counts toward the daily limit.</p>
+          <p id="testResult" class="saved" aria-live="polite"></p>
+        </div>
+        <button id="sendTest" class="btn" type="button">Send test email</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Recent detections <span class="h2-hint">last 10, kept in memory until the server restarts</span></h2>
+        <button id="refresh" class="btn-ghost" type="button">Refresh</button>
+      </div>
+      <p id="recentEmpty" class="empty">No photos checked since the server started.</p>
+      <div class="table-wrap">
+        <table id="recentTable" hidden>
+          <thead>
+            <tr><th>Photo</th><th>Time</th><th>File</th><th>Result</th><th>Confidence</th><th>Email</th></tr>
+          </thead>
+          <tbody id="recentRows"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="photoDialog">
+    <img id="dialogImage" alt="">
+    <form method="dialog"><button class="btn">Close</button></form>
+  </dialog>
+
+  <p id="toast" class="toast" role="status" hidden></p>
+
+  <script src="/static/admin.js"></script>
+</body>
+</html>

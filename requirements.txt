@@ -1,0 +1,27 @@
+# Versions tested in the Docker image (Python 3.12) and locally (Python 3.14).
+
+# Web app
+fastapi==0.159.1
+uvicorn==0.54.0
+python-multipart==0.0.32
+python-dotenv==1.2.4
+requests==2.34.2
+
+# Needed by the bundled ultralytics fork (vendor/ultralytics) to load and run model/best.pt.
+# The fork is imported from its folder, not pip-installed: its pyproject pins numpy<=2.1.1,
+# which has no wheels for newer Python versions.
+# The Dockerfile installs CPU-only torch/torchvision before this file, so these lines are already satisfied there.
+torch==2.14.1
+torchvision==0.29.1
+numpy==2.5.2
+opencv-python-headless==5.0.0.93
+matplotlib==3.11.2
+pyyaml==6.0.3
+scipy==1.18.1
+pillow==12.3.0
+pandas==3.0.6
+seaborn==0.13.2
+tqdm==4.70.1
+psutil==7.2.2
+py-cpuinfo==9.0.0
+ultralytics-thop==2.2.3

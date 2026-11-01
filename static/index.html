@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Forest Smoke Warning</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌲</text></svg>">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">🌲</span>
+      <div>
+        <h1>Forest Smoke Warning System</h1>
+        <p class="sub">Upload a forest photo and the Enhanced YOLOv8 model checks it for smoke.</p>
+      </div>
+    </div>
+    <span id="emailStatus" class="pill">Checking email…</span>
+  </header>
+
+  <div id="alert" class="alert" hidden role="alert">
+    <div class="alert-body">
+      <strong id="alertTitle"></strong>
+      <span id="alertText"></span>
+      <span id="alertEmail" class="alert-email"></span>
+    </div>
+    <button id="alertDismiss" class="btn-ghost" type="button">Dismiss</button>
+  </div>
+
+  <main class="layout">
+    <section class="panel">
+      <h2>Upload a photo</h2>
+      <label id="dropzone" class="dropzone" for="fileInput">
+        <input id="fileInput" type="file" accept="image/*" hidden>
+        <span class="drop-icon" aria-hidden="true">⬆</span>
+        <span class="drop-title">Drop an image here or click to choose</span>
+        <span class="drop-hint">JPG, PNG, BMP or WEBP · up to 15 MB</span>
+      </label>
+      <p id="uploadError" class="error" hidden></p>
+    </section>
+
+    <section class="panel">
+      <h2>Result</h2>
+      <div id="resultEmpty" class="empty">No photo checked yet.</div>
+      <div id="resultLoading" class="empty" hidden><span class="spinner"></span> Checking for smoke…</div>
+      <div id="result" hidden>
+        <div id="verdict" class="verdict"></div>
+        <img id="resultImage" class="result-image" alt="Uploaded photo with detected regions boxed">
+        <ul id="detections" class="detections"></ul>
+        <p id="resultMeta" class="meta"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><a href="/admin">Admin</a></footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
